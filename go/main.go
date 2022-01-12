@@ -8,11 +8,13 @@ import (
 	"strings"
 )
 
+type predicate func(string) bool
+
 func isLenFive(line string) bool {
 	return len(line) == 5
 }
 
-func filter(scanner *bufio.Scanner, fn func(line string) bool) {
+func filter(scanner *bufio.Scanner, fn predicate) {
 	for scanner.Scan() {
 		line := strings.ToLower(scanner.Text())
 		if fn(line) {
@@ -42,7 +44,7 @@ func containsAll(chars []rune) func(line string) bool {
 	}
 }
 
-func containsNoneOf(chars []rune) func(line string) bool {
+func containsNoneOf(chars []rune) predicate {
 	return func(line string) bool {
 		for _, r := range chars {
 			if strings.ContainsRune(line, r) {
@@ -53,13 +55,14 @@ func containsNoneOf(chars []rune) func(line string) bool {
 	}
 }
 
-func and2(left func(string) bool, right func(string) bool) func(line string) bool {
-	return func(line string) bool {
+func and2(left predicate, right predicate) predicate {
+	var fun = func(line string) bool {
 		return left(line) && right(line)
 	}
+	return fun
 }
 
-func and(funcs ...func(string) bool) func(line string) bool {
+func and(funcs ...predicate) predicate {
 	return func(line string) bool {
 		for _, fn := range funcs {
 			if !fn(line) {
