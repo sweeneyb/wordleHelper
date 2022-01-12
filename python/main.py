@@ -19,6 +19,14 @@ def combined(left, right):
     return left(value) and right(value)
   return fn
 
+def all_predicates(*args):
+  def fn(value):
+    for arg in args:
+      if(not arg(value)):
+        return False
+    return True
+  return fn
+
 def doesNotContain(chars):
   def fn(line):
       return not any(ext in line for ext in chars)
@@ -37,9 +45,20 @@ def filter(file, function) :
       if( function(line)  ):
         print("{}".format(line))
 
-fn = combined(isFive, charAtFn('a',1))
-fn = combined(fn, charAtFn('r',4))
-fn = combined(fn, doesNotContain(["e", "t", "y", "u", "p"]))
-fn = combined(fn, mustContain(["v"]))
-filter(file1, fn)
+# Basic test to make sure this works/filters
 # filter(file1, doesNotContain(["-", "f"]))
+
+# a simple approach where we compose functions
+# fn = combined(isFive, charAtFn('a',1))
+# fn = combined(fn, charAtFn('r',4))
+# fn = combined(fn, doesNotContain(["e", "t", "y", "u", "p"]))
+# fn = combined(fn, mustContain(["v"]))
+#filter(file1, fn)
+
+# But really, we want the variadic approach
+filter(file1, all_predicates(isFive,
+ charAtFn('a',1),
+  charAtFn('r',4),
+  doesNotContain(["e", "t", "y", "u", "p"]),
+  mustContain(["v"])
+  ))
