@@ -1,5 +1,8 @@
 
 
+from operator import contains
+
+
 file1 = open('../words/words.txt', 'r')
 
  
@@ -12,6 +15,11 @@ def charAt(line):
 def charAtFn(character, location):
   def fn(line):
     return line[location] == character
+  return fn
+
+def charNotAtFn(character, location):
+  def fn(line):
+    return not line[location] == character
   return fn
 
 def combined(left, right):
@@ -57,8 +65,11 @@ def filter(file, function) :
 
 # But really, we want the variadic approach
 filter(file1, all_predicates(isFive,
- charAtFn('a',1),
-  charAtFn('r',4),
-  doesNotContain(["e", "t", "y", "u", "p"]),
-  mustContain(["v"])
+  charAtFn('m',2),
+  charNotAtFn("o",1),
+
+
+  doesNotContain(["t", "i", "v", "e", "n", "e", "s", "g"]),
+  mustContain(['o'])
+  
   ))

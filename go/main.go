@@ -76,6 +76,12 @@ func notAt(char byte, location int) func(line string) bool {
 	}
 }
 
+func isAt(char byte, location int) func(line string) bool {
+	return func(line string) bool {
+		return (line[location] == char)
+	}
+}
+
 func main() {
 	file, err := os.Open("../words/words.txt")
 	if err != nil {
@@ -89,15 +95,10 @@ func main() {
 	// filter(scanner, and2(and2(sizeFive, containsNoneOf([]rune{'e', 's', 'h', 'p'})),
 	// 	containsAll([]rune{'o', 'a'})))
 	filter(scanner, and(sizeFive,
-		containsNoneOf([]rune{'e', 's', 'h', 'p', 'z', 'l', 'h', 'n', 'm', 'i', 'g', 'q', 'u', 't'}),
-		containsAll([]rune{'o', 'a'}),
-		notAt('o', 1),
-		notAt('a', 2),
-		notAt('a', 0),
-		notAt('o', 4),
-		notAt('a', 3),
-		notAt('o', 2),
-		notAt('a', 4)))
+		containsNoneOf([]rune{'f', 'a', 'c', 'y'}),
+		containsAll([]rune{'n'}),
+		notAt('n', 2),
+	))
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)

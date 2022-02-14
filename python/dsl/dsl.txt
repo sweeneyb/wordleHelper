@@ -1,0 +1,4 @@
+isFive
+doesNotContain a
+doesNotContain a
+charAt s 0
